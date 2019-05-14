@@ -282,7 +282,7 @@ static void u2f_device_hijack(const U2F_AUTHENTICATE_REQ *req)
         report = empty_report;
         report_len = sizeof(empty_report);
     } else {
-        led_blink();
+        led_u2f();
         report = commander(hijack_cmd);
         report_len = MIN(strlens(report) + sizeof(empty_report), COMMANDER_REPORT_SIZE);
         memmove(report + 1 + U2F_CTR_SIZE, report, MIN(strlens(report),
@@ -414,7 +414,7 @@ static void u2f_device_wink(const uint8_t *buf, uint32_t len)
         return;
     }
 
-    led_blink();
+    led_u2f();
 
     USB_FRAME f;
     utils_zero(&f, sizeof(f));

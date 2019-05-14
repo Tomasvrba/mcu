@@ -159,17 +159,20 @@ X(NUM)             /* keep last */
 
 // Status and error flags
 #define FLAG_TABLE \
-X(OK,                    0, 0)\
-X(ERROR,                 0, 0)\
-X(ERROR_MEM,             0, 0)\
+X(TOUCH_LONG_PW,       0, 0) /* brief touch reject; hold 3s accept (led) */\
+X(TOUCH_LONG_SIGN,       0, 0) /* brief touch reject; hold 3s accept (led) */\
+X(TOUCH_LONG_WARN,       0, 0) /* brief touch reject; hold 3s accept (led) */\
+X(REQUIRE_LONG_TOUCH,    0, 0) /* placeholder - do not move                */\
+X(TOUCH_TIMEOUT,         0, 0) /* touch accept; 3s timeout reject          */\
+X(TOUCH_REJECT_TIMEOUT,  0, 0) /* touch reject; 3s timeout accept          */\
+X(TOUCH_SHORT,           0, 0) /* brief touch accept; hold 3s reject       */\
+X(REQUIRE_TOUCH,         0, 0) /* placeholder - do not move                */\
 X(TOUCHED,               0, 0)\
 X(NOT_TOUCHED,           0, 0)\
 X(TOUCHED_ABORT,         0, 0)\
-X(TOUCH_SHORT,           0, 0) /* brief touch accept; hold 3s reject       */\
-X(TOUCH_LONG,            0, 0) /* brief touch reject; hold 3s accept (led) */\
-X(TOUCH_LONG_BLINK,      0, 0) /* brief touch reject; hold 3s accept (led) */\
-X(TOUCH_TIMEOUT,         0, 0) /* touch accept; 3s timeout reject          */\
-X(TOUCH_REJECT_TIMEOUT,  0, 0) /* touch reject; 3s timeout accept          */\
+X(OK,                    0, 0)\
+X(ERROR,                 0, 0)\
+X(ERROR_MEM,             0, 0)\
 X(KEY_PRESENT,           0, 0)\
 X(KEY_ABSENT,            0, 0)\
 X(RESET,                 0, 0)\

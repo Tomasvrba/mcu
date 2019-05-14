@@ -424,7 +424,7 @@ static void commander_process_backup(yajl_val json_node)
 
     if (strlens(erase)) {
         // Erase single file
-        int status = touch_button_press(DBB_TOUCH_LONG);
+        int status = touch_button_press(DBB_TOUCH_LONG_WARN);
         if (status == DBB_TOUCHED) {
             sd_erase(CMD_backup, erase);
         } else {
@@ -894,7 +894,7 @@ static void commander_process_device(yajl_val json_node)
 
     if (STREQ(value, attr_str(ATTR_lock))) {
         if (wallet_seeded() == DBB_OK) {
-            int status = touch_button_press(DBB_TOUCH_LONG);
+            int status = touch_button_press(DBB_TOUCH_LONG_WARN);
             if (status == DBB_TOUCHED) {
                 char msg[256];
                 memory_write_unlocked(0);
@@ -1026,7 +1026,7 @@ static void commander_process_led(yajl_val json_node)
     }
 
     if (STREQ(value, attr_str(ATTR_blink))) {
-        led_abort();
+        led_success();
         commander_fill_report(cmd_str(CMD_led), attr_str(ATTR_success), DBB_OK);
     } else {
         commander_fill_report(cmd_str(CMD_led), NULL, DBB_ERR_IO_INVALID_CMD);
@@ -1492,11 +1492,15 @@ static int commander_touch_button(int found_cmd)
     if ((found_cmd == CMD_seed || found_cmd == CMD_reset) && wallet_seeded() != DBB_OK) {
         // Do not require touch if not yet seeded
         return DBB_OK;
+    } else if((found_cmd == CMD_seed || found_cmd == CMD_reset) && wallet_seeded() == DBB_OK) {
+        return touch_button_press(DBB_TOUCH_LONG_WARN);
     } else if (found_cmd == CMD_bootloader && commander_bootloader_unlocked()) {
         // Do not require touch to relock bootloader
         return DBB_OK;
-    } else if (found_cmd < CMD_REQUIRE_TOUCH) {
-        return touch_button_press(DBB_TOUCH_LONG);
+    } else if (found_cmd == CMD_password || found_cmd == CMD_hidden_password) {
+        return touch_button_press(DBB_TOUCH_LONG_PW);
+    } else if (found_cmd == CMD_bootloader) {
+        return touch_button_press(DBB_TOUCH_LONG_WARN);
     } else {
         return DBB_OK;
     }
@@ -1566,7 +1570,7 @@ static void commander_parse(char *command)
                     memset(TFA_PIN, 0, sizeof(TFA_PIN));
                 }
             }
-            status = touch_button_press(DBB_TOUCH_LONG_BLINK);
+            status = touch_button_press(DBB_TOUCH_LONG_SIGN);
             if (status == DBB_TOUCHED) {
                 yajl_tree_free(json_node);
                 json_node = yajl_tree_parse(sign_command, NULL, 0);
@@ -1765,7 +1769,7 @@ static int commander_check_init(const char *encrypted_command)
     }
 
     if (memory_report_access_err_count() >= COMMANDER_TOUCH_ATTEMPTS) {
-        if (touch_button_press(DBB_TOUCH_LONG) != DBB_TOUCHED) {
+        if (touch_button_press(DBB_TOUCH_LONG_PW) != DBB_TOUCHED) {
             commander_fill_report(cmd_str(CMD_input), NULL, DBB_ERR_IO_TOUCH_BUTTON);
             return DBB_ERROR;
         }
