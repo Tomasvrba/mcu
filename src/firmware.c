@@ -139,9 +139,7 @@ int main (void)
     usb_suspend_action();
     udc_start();
 
-    led_on();
-    delay_ms(300);
-    led_off();
+    led_success();
 
     while (1) {
         sleepmgr_enter_sleep();

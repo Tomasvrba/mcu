@@ -38,10 +38,14 @@
 
 void led_on(void);
 void led_off(void);
+void led_warn(void);
+void led_success(void);
+void led_u2f(void);
+void led_password(void);
+void led_sign(void);
 void led_toggle(void);
-void led_blink(void);
 void led_abort(void);
-void led_code(uint8_t code);
+int led_code(uint8_t code);
 
 
 #endif
