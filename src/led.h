@@ -39,6 +39,7 @@
 void led_on(void);
 void led_off(void);
 void led_warn(void);
+void led_pair(void);
 void led_success(void);
 void led_u2f(void);
 void led_password(void);

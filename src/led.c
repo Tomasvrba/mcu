@@ -157,6 +157,14 @@ void led_success(void)
 }
 
 /**
+ * Indicate request to sign a transaction.
+ */
+void led_sign(void)
+{
+    led_short();
+}
+
+/**
  * Indicate request to set device password or access hidden wallet.
  */
 void led_password(void)
@@ -166,20 +174,22 @@ void led_password(void)
 }
 
 /**
- * Indicate request to sign a transaction.
+ * Warning blink for the user to make sure they triggered a potentially dangerous command.
+ * Applies to the lock device, erase backup, and reset/re-seed device commands.
  */
-void led_sign(void)
+void led_warn(void)
 {
+    led_short();
+    led_short();
     led_short();
 }
 
 /**
- * Warning blink for the user to make sure they triggered a potentially dangerous command.
- * Applies to the lock device, erase backup, reset/re-seed device, bootloader lock/unlock, 
- * and ecdh key re-generation commands.
+ * Do NOT change. This pattern is for ECDH re-pairing warning only! 
  */
-void led_warn(void)
+void led_pair(void)
 {
+    led_short();
     led_short();
     led_short();
     led_short();

@@ -344,7 +344,7 @@ void bootloader_jump(void)
             binary_exec(app_start_addr);
             /* no return */
         }
-        if (touch_button_press(DBB_TOUCH_TIMEOUT) == DBB_ERR_TOUCH_TIMEOUT) {
+        if (touch_button_press(TOUCH_TIMEOUT) == DBB_ERR_TOUCH_TIMEOUT) {
             binary_exec(app_start_addr);
             /* no return */
         }

@@ -157,22 +157,27 @@ X(__FORCE__)      \
 X(NUM)             /* keep last */
 
 
+// Types of touch
+#define TOUCH_TYPE_TABLE \
+X(LONG_PW)               /* TOUCH_LONG: brief touch reject; hold 3s accept (led) */\
+X(LONG_SIGN)             \
+X(LONG_WARN)             \
+X(LONG_BOOT)             \
+X(LONG_PAIR)             \
+X(REQUIRE_LONG_TOUCH)    /* placeholder - do not move                */\
+X(TIMEOUT)               /* touch accept; 3s timeout reject          */\
+X(REJECT_TIMEOUT)        /* touch reject; 3s timeout accept          */\
+X(SHORT)                 /* brief touch accept; hold 3s reject       */\
+X(REQUIRE_TOUCH)         /* placeholder - do not move                */\
+
 // Status and error flags
 #define FLAG_TABLE \
-X(TOUCH_LONG_PW,       0, 0) /* brief touch reject; hold 3s accept (led) */\
-X(TOUCH_LONG_SIGN,       0, 0) /* brief touch reject; hold 3s accept (led) */\
-X(TOUCH_LONG_WARN,       0, 0) /* brief touch reject; hold 3s accept (led) */\
-X(REQUIRE_LONG_TOUCH,    0, 0) /* placeholder - do not move                */\
-X(TOUCH_TIMEOUT,         0, 0) /* touch accept; 3s timeout reject          */\
-X(TOUCH_REJECT_TIMEOUT,  0, 0) /* touch reject; 3s timeout accept          */\
-X(TOUCH_SHORT,           0, 0) /* brief touch accept; hold 3s reject       */\
-X(REQUIRE_TOUCH,         0, 0) /* placeholder - do not move                */\
-X(TOUCHED,               0, 0)\
-X(NOT_TOUCHED,           0, 0)\
-X(TOUCHED_ABORT,         0, 0)\
 X(OK,                    0, 0)\
 X(ERROR,                 0, 0)\
 X(ERROR_MEM,             0, 0)\
+X(TOUCHED,               0, 0)\
+X(NOT_TOUCHED,           0, 0)\
+X(TOUCHED_ABORT,         0, 0)\
 X(KEY_PRESENT,           0, 0)\
 X(KEY_ABSENT,            0, 0)\
 X(RESET,                 0, 0)\
@@ -256,6 +261,10 @@ enum CMD_ENUM { CMD_TABLE };
 
 #define X(a) ATTR_ ## a,
 enum CMD_ATTR_ENUM { ATTR_TABLE };
+#undef X
+
+#define X(a) TOUCH_ ## a,
+enum TOUCH_TYPE_ENUM { TOUCH_TYPE_TABLE };
 #undef X
 
 #define X(a, b, c) DBB_ ## a,

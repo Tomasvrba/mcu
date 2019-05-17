@@ -103,7 +103,7 @@ static void ecdh_hash_pubkey_command(const char *pair_hash_pubkey)
         return;
     }
 
-    int status = touch_button_press(DBB_TOUCH_LONG_WARN);
+    int status = touch_button_press(TOUCH_LONG_PAIR);
     if (status != DBB_TOUCHED) {
         utils_zero(TFA_IN_HASH_PUB, SHA256_DIGEST_LENGTH);
         commander_fill_report(cmd_str(CMD_ecdh), NULL, status);

@@ -68,7 +68,7 @@ void touch_init(void)
 uint8_t touch_button_press(uint8_t touch_type)
 {
 #ifdef TESTING
-    if (touch_type == DBB_TOUCH_REJECT_TIMEOUT) {
+    if (touch_type == TOUCH_REJECT_TIMEOUT) {
         // Simulate touch sequence for ecdh led blink coding
         static uint8_t touch_short_count = 0;
         if (!touch_short_count) {
@@ -93,11 +93,11 @@ uint8_t touch_button_press(uint8_t touch_type)
     }
 
 
-    if (touch_type >= DBB_REQUIRE_TOUCH) {
+    if (touch_type >= TOUCH_REQUIRE_TOUCH) {
         return DBB_ERROR;
     }
 
-    if (touch_type != DBB_TOUCH_REJECT_TIMEOUT) {
+    if (touch_type != TOUCH_REJECT_TIMEOUT) {
         led_on();
     }
 
@@ -107,21 +107,24 @@ uint8_t touch_button_press(uint8_t touch_type)
     qt_led_toggle_ms = QTOUCH_TOUCH_BLINK_OFF;
     systick_current_time_ms = 0;
     while (systick_current_time_ms < QTOUCH_TOUCH_TIMEOUT ||
-            touch_type == DBB_TOUCH_SHORT ||
-            touch_type < DBB_REQUIRE_LONG_TOUCH) {
+            touch_type == TOUCH_SHORT ||
+            touch_type < TOUCH_REQUIRE_LONG_TOUCH) {
 
         if (systick_current_time_ms > QTOUCH_TOUCH_TIMEOUT_HARD) {
             break;
         }
 
-        if (touch_type < DBB_REQUIRE_LONG_TOUCH && systick_current_time_ms > qt_led_toggle_ms) {
+        // TOUCH_LONG_BOOT for unlocking the bootloader does not have a blinking pattern. The LED stays on.
+        if (touch_type != TOUCH_LONG_BOOT && touch_type < TOUCH_REQUIRE_LONG_TOUCH && systick_current_time_ms > qt_led_toggle_ms) {
             led_off();
             if (systick_current_time_ms > qt_led_toggle_ms + QTOUCH_TOUCH_BLINK_OFF) {
                 qt_led_toggle_ms += QTOUCH_TOUCH_BLINK_ON + QTOUCH_TOUCH_BLINK_OFF;
-                if (touch_type == DBB_TOUCH_LONG_SIGN) {
+                if (touch_type == TOUCH_LONG_SIGN) {
                     led_sign();
-                } else if (touch_type == DBB_TOUCH_LONG_PW) {
+                } else if (touch_type == TOUCH_LONG_PW) {
                     led_password();
+                } else if (touch_type == TOUCH_LONG_PAIR) {
+                    led_pair();
                 } else {
                     led_warn();
                 }
@@ -154,24 +157,24 @@ uint8_t touch_button_press(uint8_t touch_type)
                     // If released before exit_time_ms for:
                     //     - DBB_TOUCH_LONG_BLINK, answer is 'reject'
                     //     - DBB_TOUCH_LONG, answer is 'reject'
-                    //     - DBB_TOUCH_SHORT, answer is 'accept'
-                    if (touch_type  < DBB_REQUIRE_LONG_TOUCH) {
+                    //     - TOUCH_SHORT, answer is 'accept'
+                    if (touch_type  < TOUCH_REQUIRE_LONG_TOUCH) {
                         pushed = DBB_TOUCHED_ABORT;
                         break;
-                    } else if (touch_type == DBB_TOUCH_SHORT) {
+                    } else if (touch_type == TOUCH_SHORT) {
                         pushed = DBB_TOUCHED;
                         break;
                     }
-                } else if (touch_type < DBB_REQUIRE_LONG_TOUCH) {
+                } else if (touch_type < TOUCH_REQUIRE_LONG_TOUCH) {
                     pushed = DBB_TOUCHED;
-                } else if (touch_type == DBB_TOUCH_SHORT) {
+                } else if (touch_type == TOUCH_SHORT) {
                     pushed = DBB_TOUCHED_ABORT;
-                } else if (touch_type == DBB_TOUCH_REJECT_TIMEOUT) {
+                } else if (touch_type == TOUCH_REJECT_TIMEOUT) {
                     pushed = DBB_TOUCHED_ABORT;
                     break;
-                } else if (touch_type == DBB_TOUCH_TIMEOUT) {
+                } else if (touch_type == TOUCH_TIMEOUT) {
                     // If touched before exit_time_ms for:
-                    //     - DBB_TOUCH_TIMEOUT, answer is 'accept'
+                    //     - TOUCH_TIMEOUT, answer is 'accept'
                     pushed = DBB_TOUCHED;
                     break;
                 }
@@ -184,7 +187,7 @@ uint8_t touch_button_press(uint8_t touch_type)
     NVIC_SetPriority(SysTick_IRQn, 15);
 
     if (pushed == DBB_TOUCHED) {
-        if (touch_type < DBB_REQUIRE_LONG_TOUCH) {
+        if (touch_type < TOUCH_REQUIRE_LONG_TOUCH) {
             led_success();
         }
         led_off();

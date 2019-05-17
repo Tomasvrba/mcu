@@ -199,7 +199,7 @@ static void u2f_device_register(const USB_APDU *a)
         return;
     }
 
-    if (touch_button_press(DBB_TOUCH_TIMEOUT) != DBB_TOUCHED) {
+    if (touch_button_press(TOUCH_TIMEOUT) != DBB_TOUCHED) {
         u2f_send_error(U2F_SW_CONDITIONS_NOT_SATISFIED);
         return;
 
@@ -354,7 +354,7 @@ static void u2f_device_authenticate(const USB_APDU *a)
         return;
     }
 
-    if (touch_button_press(DBB_TOUCH_TIMEOUT) != DBB_TOUCHED) {
+    if (touch_button_press(TOUCH_TIMEOUT) != DBB_TOUCHED) {
         u2f_send_error(U2F_SW_CONDITIONS_NOT_SATISFIED);
         return;
 
